@@ -14,7 +14,7 @@
       
       <view class="movies-container">
           <scroll-view scroll-x style="width: 100%">
-            <block wx:for="{{movies}}" wx:for-item="movie">
+            <block wx:for="{{movies}}" wx:for-item="movie" wx:key="index">
               <template is="movieTemplate" data="{{...movie}}"/>
             </block>
           </scroll-view>

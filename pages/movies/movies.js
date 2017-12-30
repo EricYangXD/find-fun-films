@@ -10,9 +10,11 @@ Page({
     top250: {},
     searchResult: {},
     containerShow: true,
-    searchPanelShow: false,
+    // 让删除按钮一直显示
+    searchPanelShow: true,
+    searchInfo:""
   },
-    onShareAppMessage: function () {
+  onShareAppMessage: function () {
     return {
       title: '光与影',
       desc: '进入搜索电影吧',
@@ -70,23 +72,46 @@ Page({
   onCancelImgTap: function (event) {
       this.setData({
         containerShow: true,
-        searchPanelShow: false,
-        searchResult:{}
-      }
-    )
+        // searchPanelShow: false,
+        searchResult:{},
+        searchInfo:""
+      });
   },
 
   onBindFocus: function (event) {
     this.setData({
       containerShow: false,
       searchPanelShow: true
-    })
+    });
   },
 
   onBindBlur: function (event) {
-    var text = event.detail.value;
+    // var text = event.detail.value;
+    var text = this.data.searchInfo;
+    if (text === "" || text === null || text ===undefined){
+      wx.showToast({
+        title: "输入内容无效",
+        icon: 'loading',
+        duration: 1000
+      });
+      return false;
+    }
     var searchUrl = app.globalData.doubanBase + "/v2/movie/search?q=" + text;
     this.getMovieListData(searchUrl, "searchResult", "");
+  },
+  //无法直接获取input中的value，只能先保存，后获取
+  onInputValue:function(event){
+    this.setData({
+      searchInfo:event.detail.value||""
+    });
+  },  
+  //input框失去焦点后重新展示container
+  onLostFocus:function(event){
+    this.setData({
+      containerShow: true,
+      // searchPanelShow: false
+    });
+    // event.preventDefault();
   },
   //获取具体数据，并拼装
   processDoubanData: function (moviesDouban, settedKey, categoryTitle) {

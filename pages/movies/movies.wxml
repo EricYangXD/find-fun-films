@@ -1,13 +1,11 @@
 <import src="movie-list/movie-list-template.wxml" />
 <import src="movie-grid/movie-grid-template.wxml" />
 <view class="search">
-  <icon type="search" class="search-img" size="13" color="#405f80"></icon>
-  <input type="text" placeholder="输入演员或片名" 
-  placeholder-class="placeholder" bindfocus="onBindFocus"
-  bindblur="onBindBlur"/>
+  <icon type="search" class="search-img" size="13" color="#405f80"  bindtap="onBindBlur"></icon>
+  <input type="text" placeholder="请输入要搜索的演员或片名" placeholder-class="placeholder" bindfocus="onBindFocus" bindinput="onInputValue" bindblur="onLostFocus" value="{{searchInfo}}"/>
   <image wx:if="{{searchPanelShow}}" src="/images/icon/xx.png" class="xx-img" bindtap="onCancelImgTap"></image>
 </view>
-<view class="container" wx:if="{{containerShow}}">
+<view class="container" wx:if="{{containerShow}}" >
   <view class="movies-template">
     <template is="movieListTemplate" data="{{...inTheaters}}" />
   </view>
@@ -16,10 +14,10 @@
     <template is="movieListTemplate" data="{{...comingSoon}}" />
   </view>
   <view class="movies-template">
-    <template is="movieListTemplate" data="{{...top250}}"/>
+    <template is="movieListTemplate" data="{{...top250}}" />
   </view>
 </view>
 
 <view class="search-panel" wx:if="{{searchPanelShow}}">
-    <template is="movieGridTemplate" data="{{...searchResult}}"/>
+  <template is="movieGridTemplate" data="{{...searchResult}}" />
 </view>

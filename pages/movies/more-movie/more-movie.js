@@ -1,6 +1,7 @@
 // pages/movies/more-movie/more-movie.js
 var app = getApp()
 var util = require('../../../utils/util.js')
+
 Page({
   data: {
     movies: {},
@@ -8,9 +9,10 @@ Page({
     requestUrl: "",
     totalCount: 0,
     isEmpty: true,
-    hiddenLoading:false,
-    disabledRemind:false
+    hiddenLoading: false,
+    disabledRemind: false
   },
+
   onLoad: function (options) {
     var category = options.category;
     this.data.navigateTitle = category;
@@ -34,6 +36,8 @@ Page({
     this.data.requestUrl = dataUrl;
     util.http(dataUrl, this.processDoubanData)
   },
+
+  //下拉加载更多
   onPullDownRefresh: function (event) {
     var refreshUrl = this.data.requestUrl +
       "?star=0&count=20"
@@ -43,23 +47,28 @@ Page({
     util.http(refreshUrl, this.processDoubanData);
     wx.showNavigationBarLoading();
   },
+
   onReachBottom: function (event) {
     // 上滑加载
     var nextUrl = this.data.requestUrl +
       "?start=" + this.data.totalCount + "&count=20";
-    util.http(nextUrl, this.processDoubanData)
-    wx.showNavigationBarLoading()
+    util.http(nextUrl, this.processDoubanData);
+    wx.showNavigationBarLoading();
+    this.setData({
+      hiddenLoading: false
+    });
   },
+
   processDoubanData: function (moviesDouban) {
     var movies = [];
     //没有更多啦
-    if(moviesDouban.subjects.length<=0){
+    if (moviesDouban.subjects.length <= 0) {
       var _this = this;
-      if(!_this.data.disabledRemind){
+      if (!_this.data.disabledRemind) {
         _this.setData({
           disabledRemind: true
         });
-        setTimeout(function(){
+        setTimeout(function () {
           _this.setData({
             disabledRemind: false
           });
@@ -80,15 +89,14 @@ Page({
         coverageUrl: subject.images.large,
         movieId: subject.id
       }
-      movies.push(temp)
+      movies.push(temp);
     }
     var totalMovies = {}
 
     //如果要绑定新加载的数据，那么需要同旧有的数据合并在一起
     if (!this.data.isEmpty) {
       totalMovies = this.data.movies.concat(movies);
-    }
-    else {
+    } else {
       totalMovies = movies;
       this.data.isEmpty = false;
     }
@@ -97,10 +105,10 @@ Page({
     });
     this.data.totalCount += 20;
     wx.hideNavigationBarLoading();
-    wx.stopPullDownRefresh()
+    wx.stopPullDownRefresh();
     this.setData({
-      hiddenLoading:true
-    })
+      hiddenLoading: true
+    });
   },
 
   onReady: function (event) {
