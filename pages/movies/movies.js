@@ -8,11 +8,14 @@ Page({
     inTheaters: {},
     comingSoon: {},
     top250: {},
-    searchResult: {},
+    searchResult: {
+      categoryTitle: "",
+      movies: []
+    },
     containerShow: true,
     // 让删除按钮一直显示
-    searchPanelShow: true,
-    searchInfo:""
+    searchPanelShow: false,
+    searchInfo: ""
   },
   onShareAppMessage: function () {
     return {
@@ -42,10 +45,10 @@ Page({
     })
   },
   //点击电影
-  onMovieTap:function(event){
+  onMovieTap: function (event) {
     var movieId = event.currentTarget.dataset.movieid;
     wx.navigateTo({
-      url: "movie-detail/movie-detail?id="+movieId
+      url: "movie-detail/movie-detail?id=" + movieId
     })
   },
   //获取数据
@@ -70,12 +73,12 @@ Page({
   },
 
   onCancelImgTap: function (event) {
-      this.setData({
-        containerShow: true,
-        // searchPanelShow: false,
-        searchResult:{},
-        searchInfo:""
-      });
+    this.setData({
+      containerShow: true,
+      searchPanelShow: false,
+      searchResult: {},
+      searchInfo: ""
+    });
   },
 
   onBindFocus: function (event) {
@@ -88,7 +91,7 @@ Page({
   onBindBlur: function (event) {
     // var text = event.detail.value;
     var text = this.data.searchInfo;
-    if (text === "" || text === null || text ===undefined){
+    if (text === "" || text === null || text === undefined) {
       wx.showToast({
         title: "输入内容无效",
         icon: 'loading',
@@ -100,18 +103,25 @@ Page({
     this.getMovieListData(searchUrl, "searchResult", "");
   },
   //无法直接获取input中的value，只能先保存，后获取
-  onInputValue:function(event){
+  onInputValue: function (event) {
     this.setData({
-      searchInfo:event.detail.value||""
+      searchInfo: event.detail.value || ""
     });
-  },  
+  },
   //input框失去焦点后重新展示container
-  onLostFocus:function(event){
-    this.setData({
-      containerShow: true,
-      // searchPanelShow: false
-    });
-    // event.preventDefault();
+  onLostFocus: function (event) {
+    if (this.data.searchResult.movies === "") {
+      this.setData({
+        containerShow: false,
+        searchPanelShow: true
+      });
+    }
+    // else{
+    //   this.setData({
+    //     containerShow: false,
+    //     searchPanelShow: true
+    //   });
+    // }
   },
   //获取具体数据，并拼装
   processDoubanData: function (moviesDouban, settedKey, categoryTitle) {
@@ -123,7 +133,7 @@ Page({
       if (title.length >= 6) {
         title = title.substring(0, 6) + "...";
       }
-      // 定义拼装数据格式，[1,1,1,1,1] [1,1,1,0,0]
+      // 定义star格式，[1,1,1,1,1] [1,1,1,0,0]
       var temp = {
         stars: util.convertToStarsArray(subject.rating.stars),
         title: title,
@@ -141,8 +151,23 @@ Page({
       movies: movies
     };
     this.setData(readyData);
+    //如果搜索结果为空，弹窗提醒
+    if (settedKey === "searchResult" && movies.length === 0) {
+      this.setData({
+        containerShow: false,
+        searchPanelShow: true
+      });
+      wx.showToast({
+        title: "没有找到...",
+        icon: 'loading',
+        duration: 1000
+      });
+      wx.hideNavigationBarLoading();
+      return false;
+    }
+
     //打印接口返回数据
-    console.info(settedKey,readyData);
+    console.info(settedKey, readyData);
     // debugger;
     wx.hideNavigationBarLoading();
   }
