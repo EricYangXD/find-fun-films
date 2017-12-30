@@ -119,7 +119,8 @@ page{
   align-items: stretch;
   animation: bd-rise 2s cubic-bezier(0.23,1,0.32,1) .75s forwards;
   opacity: 0;
-  padding-top: 200rpx;
+  padding: 200rpx 50rpx 500rpx 50rpx;
+  /* padding-bottom: 500rpx ; */
 }
 @keyframes bd-rise{
   from {opacity: 0; transform: translate3d(0,60rpx,0); }

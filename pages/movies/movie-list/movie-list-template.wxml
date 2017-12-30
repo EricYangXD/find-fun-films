@@ -1,7 +1,9 @@
 <import src="../movie/movie-template.wxml" />
+
 <template name="movieListTemplate">
   <view class="movie-list-container">
     <view class="inner-container">
+
       <view class="movie-head">
         <text class="slogan">{{categoryTitle}}</text>
         <view catchtap="onMoreTap" class="more" data-category="{{categoryTitle}}">
@@ -10,16 +12,13 @@
         </view>
       </view>
       
-        <view class="movies-container">
-            <scroll-view scroll-x style="width: 100%">
-              <block wx:for="{{movies}}" wx:for-item="movie">
-                
-                <template is="movieTemplate" data="{{...movie}}"/>
-              </block>
-            </scroll-view>
-          <!--<template is="movieTemplate" />
-          <template is="movieTemplate" />-->
-        </view>
+      <view class="movies-container">
+          <scroll-view scroll-x style="width: 100%">
+            <block wx:for="{{movies}}" wx:for-item="movie">
+              <template is="movieTemplate" data="{{...movie}}"/>
+            </block>
+          </scroll-view>
+      </view>
 
     </view>
   </view>

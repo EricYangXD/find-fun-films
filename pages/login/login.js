@@ -36,7 +36,7 @@ Page({
         return {
         title: '找好电影推荐',
         desc: '进入搜索电影吧',
-        path: '/pages/welcome/welcome'
+        path: 'pages/welcome/welcome'
         }
   }
 })
