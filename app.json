@@ -5,6 +5,7 @@
     "pages/movies/movie-detail/movie-detail",
     "pages/movies/more-movie/more-movie"
   ],
+  
   "window": {
     "navigationBarBackgroundColor": "#314C6D"
   }
